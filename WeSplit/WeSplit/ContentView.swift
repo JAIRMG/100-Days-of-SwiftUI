@@ -9,6 +9,7 @@ struct ContentView: View {
   @FocusState private var amountIsFocused: Bool
 
   let tipPercentages = [10, 15, 20, 25, 0]
+  let currencyFormat: FloatingPointFormatStyle<Double>.Currency = .init(code: Locale.current.currencyCode ?? .init(format: "USD"))
   
   var totalPerPerson: Double {
     // calculate the total per person here
@@ -21,12 +22,15 @@ struct ContentView: View {
     return amountPerPerson
   }
   
+  var totalCheck: Double {
+    return (totalPerPerson * Double(numberOfPeople + 2))
+  }
+  
   var body: some View {
     NavigationView {
       Form {
         Section {
-          TextField("Amount", value: $checkAmount, format:
-                        .currency(code: Locale.current.currencyCode ?? "USD"))
+          TextField("Amount", value: $checkAmount, format: currencyFormat)
             .keyboardType(.decimalPad)
             .focused($amountIsFocused)
           Picker("Number of people", selection: $numberOfPeople) {
@@ -37,17 +41,23 @@ struct ContentView: View {
         }
         Section {
           Picker("Tip percentage", selection: $tipPercentage) {
-            ForEach(tipPercentages, id: \.self) {
+            ForEach(0..<101) {
               Text($0, format: .percent)
             }
           }
-          .pickerStyle(.segmented)
         } header: {
           Text("How much tip do you want to leave?")
         }
         
         Section {
-          Text(totalPerPerson, format: .currency(code: Locale.current.currencyCode ?? "USD"))
+          Text(totalPerPerson, format: currencyFormat)
+        } header: {
+          Text("Amount per person")
+        }
+        Section {
+          Text(totalCheck, format: currencyFormat)
+        } header: {
+          Text("Total check")
         }
       }
       .navigationTitle("WeSplit")
