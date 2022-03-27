@@ -12,6 +12,8 @@ struct ContentView: View {
   @State private var alertMessage = ""
   @State private var showingAlert = false
   
+  private let cups = Array(1...20)
+  
   static var defaultWakeTime: Date {
     var components = DateComponents()
     components.hour = 7
@@ -32,8 +34,12 @@ struct ContentView: View {
             
           }
           
-          Section("Daily coffe intake") {            
-            Stepper(coffeeAmount == 1 ? "1 cup" : "\(coffeeAmount) cups", value: $coffeeAmount, in: 1...20)
+          Section("Daily coffe intake") {
+            Picker(coffeeAmount == 1 ? "1 cup" : "\(coffeeAmount) cups", selection: $coffeeAmount) {
+              ForEach(cups, id: \.self) {
+                Text("\($0)")
+              }
+            }
           }
         }
         .navigationTitle("BetterRest")
