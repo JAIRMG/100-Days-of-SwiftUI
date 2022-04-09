@@ -9,21 +9,16 @@ struct ContentView: View {
       print(animationAmount)
       
       return VStack {
-        Stepper("Scale amount", value: $animationAmount.animation(
-          .easeInOut(duration: 1)
-            .repeatCount(3, autoreverses: true)
-        ), in: 1...10)
-        
-        Spacer()
-        
         Button("Tap Me") {
-          animationAmount += 1
+          withAnimation {
+            animationAmount += 360
+          }
         }
         .padding(50)
         .background(.red)
         .foregroundColor(.white)
         .clipShape(Circle())
-        .scaleEffect(animationAmount)
+        .rotation3DEffect(.degrees(animationAmount), axis: (x: 0, y: 1, z: 0))
       }
     }
 }
